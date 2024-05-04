@@ -1,0 +1,1 @@
+/usr/bin/c++ CMakeFiles/prikol.dir/Pointer_robot_location.cpp.o -o prikol

@@ -1,0 +1,4 @@
+/home/antwoor/cpp_fundamentals/build/CMakeFiles/line_following_robot.dir
+/home/antwoor/cpp_fundamentals/build/CMakeFiles/prikol.dir
+/home/antwoor/cpp_fundamentals/build/CMakeFiles/edit_cache.dir
+/home/antwoor/cpp_fundamentals/build/CMakeFiles/rebuild_cache.dir
