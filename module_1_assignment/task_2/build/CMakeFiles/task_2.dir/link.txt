@@ -1,0 +1,1 @@
+/usr/bin/c++ CMakeFiles/task_2.dir/main.cpp.o CMakeFiles/task_2.dir/robot_class.cpp.o -o task_2
