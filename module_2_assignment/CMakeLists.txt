@@ -12,16 +12,16 @@ endif()
 
 find_package(ament_cmake REQUIRED)
 find_package(rclcpp REQUIRED)
-find_package(std_msgs REQUIRED)
+find_package(geometry_msgs REQUIRED)
 
-add_executable(talker src/publisher.cpp)
-add_executable(listener src/subscriber.cpp)
-ament_target_dependencies(talker rclcpp std_msgs)
-ament_target_dependencies(listener rclcpp std_msgs)
+add_executable(turtle_cmd_pub src/task_1/turtle_pub.cpp)
+ament_target_dependencies(turtle_cmd_pub rclcpp geometry_msgs)
 
+#add_executable(task1_circle src/task_1/turtle_circle.cpp)
+#ament_target_dependencies(task1_circle rclcpp geometry_msgs)
 install(TARGETS
-  talker
-  listener
+  #task1_circle  
+  turtle_cmd_pub
   DESTINATION lib/${PROJECT_NAME})
 
 ament_package()
