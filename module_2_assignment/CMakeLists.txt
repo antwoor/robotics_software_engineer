@@ -14,13 +14,13 @@ find_package(ament_cmake REQUIRED)
 find_package(rclcpp REQUIRED)
 find_package(geometry_msgs REQUIRED)
 
-add_executable(turtle_cmd_pub src/task_1/turtle_pub.cpp)
+add_executable(turtle_cmd_pub src/task_1/turtle_pub.cpp src/task_1/sin.cpp)
 ament_target_dependencies(turtle_cmd_pub rclcpp geometry_msgs)
 
-#add_executable(task1_circle src/task_1/turtle_circle.cpp)
-#ament_target_dependencies(task1_circle rclcpp geometry_msgs)
+add_executable(task1_circle src/task_1/turtle_circle.cpp src/task_1/turtle_pub.cpp src/task_1/circle.cpp)
+ament_target_dependencies(task1_circle rclcpp geometry_msgs)
 install(TARGETS
-  #task1_circle  
+  task1_circle  
   turtle_cmd_pub
   DESTINATION lib/${PROJECT_NAME})
 
