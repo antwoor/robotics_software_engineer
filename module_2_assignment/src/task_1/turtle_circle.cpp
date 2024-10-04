@@ -1,10 +1,11 @@
 #include "turtle_circle.h"
 
-CirclePublisher::CirclePublisher() : TrajectoryPublisher() {
-    this->message.linear.x = 0.5; // Константная скорость
+CirclePublisher::CirclePublisher(const int& radius) : TrajectoryPublisher() {
+    this->message.linear.x = 1; // linear velocity
+    this->message.angular.z = this->message.linear.x/radius; // calc angular velocity
 }
 
 void CirclePublisher::timer_callback() {
-    this->message.angular.z = 1.0; // Угловая скорость для кругового движения
+    
     _pub->publish(this->message);
 }

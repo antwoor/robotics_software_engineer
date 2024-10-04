@@ -2,7 +2,7 @@
 
 class CirclePublisher : public TrajectoryPublisher {
 public:
-    CirclePublisher();
+    CirclePublisher(const int& radius);
 protected:
     void timer_callback() override; 
 };
