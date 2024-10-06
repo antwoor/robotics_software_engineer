@@ -8,7 +8,7 @@ def generate_launch_description():
         name='simulator'
     )
     radius = '1'  #initial radius of spiral
-    growth_rate = '0.1'  # koefficient of spiral growth
+    growth_rate = '1'  # koefficient of spiral growth
     SpiralTurtle = Node(
         package='module_2_assignment',
         executable='task1_spiral',
