@@ -1,0 +1,32 @@
+<?xml version="1.0"?>
+
+<robot name="tf_tree">
+    
+    <link name="base_link"/>
+    <link name="link_1"/>
+    <link name="link_2"/>
+
+    <joint name="base_joint" type="fixed">
+        <origin xyz="0.0 0.0 -0.48" rpy="0.0 0.0 0.0"/>
+        <parent link="base_link"/>
+        <child link="link_1"/>
+        <axis xyz="0.0 0.0 1.0"/>
+        <!-- <limit lower="-3.14" upper="3.14" effort="1.0" velocity="0.0"/> -->
+    </joint>
+
+    <joint name="joint_1" type="fixed">
+        <origin xyz="0.0 0.0 0.48" rpy="0.0 0.0 0.0"/>
+        <parent link="link_1"/>
+        <child link="link_2"/>
+        <axis xyz="0.0 1.0 0.0"/>
+        <limit lower="-3.14" upper="3.14" effort="1.0" velocity="0.0"/>
+    </joint>
+
+    <joint name="joint_2" type="fixed">
+        <origin xyz="0.0 1.0 0.48" rpy="0.0 0.0 0.0"/>
+        <parent link="link_1"/>
+        <child link="link_2"/> 
+        <axis xyz="0.0 1.0 0.0"/>
+        <limit lower="-3.14" upper="3.14" effort="1.0" velocity="0.0"/>
+    </joint>
+</robot>
