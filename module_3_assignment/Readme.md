@@ -5,15 +5,23 @@
 This assignment focuses on understanding and applying the concepts of URDF (Unified Robot Description Format) to create custom robots in ROS 2. You will design and build a robotic arm with multiple degrees of freedom (DOF), integrate it with a mobile platform, and create an Ackerman drive system.
 
 ## Tasks
-
+```zsh
+colcon build --symlink-install &&\
+source install/setup.zsh
+```
 ### Task 1: Create a Custom Transform Tree
+```zsh
+ros2 launch module_3_assignment task1_rviz.launch.py
+```
 
 - **Design a robotic arm with 3 DOF** using URDF:
   - **Define the transform tree** for the robotic arm without including any visualization tags. Focus solely on creating the correct transforms for the arm's joints.
   - **Do not include any visual elements** at this stage—only the transforms should be defined.
 
 ### Task 2: Add Joints and Visual Elements
-
+```zsh
+ros2 launch module_3_assignment task2_rviz.launch.py
+```
 - **Enhance the robotic arm** you created earlier by adding joints:
   - **Finger Joints:** Use prismatic joint types for the fingers.
   - **Base Joint:** The base joint should be of the continuous type.
@@ -22,6 +30,9 @@ This assignment focuses on understanding and applying the concepts of URDF (Unif
 - **Add visualization tags** to your robot's URDF to create the body, primarily using cylinder shapes for simplicity.
 
 ### Task 3: Build a Mobile Manipulator
+```zsh
+ros2 launch module_3_assignment task3_rviz.launch.py
+```
 
 - **Integrate the robotic arm** with a mobile robot platform:
   - **Place the robotic arm** on top of a differential drive robot.
