@@ -1,0 +1,12 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro" name="manipulator">
+
+    <!-- Включаем описание манипулятора -->
+    <xacro:property name="base_origin" value="0 0 0.2"/> <!-- Поднятие манипулятора над платформой -->
+
+    <!-- <link name="base_link"/> -->
+    <!-- Манипулятор из вашего файла -->
+    <xacro:include filename="static_robot.urdf"/>
+    <!-- <xacro:manipulator base_link="base_link"/> -->
+
+</robot>
