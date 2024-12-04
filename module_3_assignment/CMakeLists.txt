@@ -23,4 +23,10 @@ if(BUILD_TESTING)
   ament_lint_auto_find_test_dependencies()
 endif()
 
-ament_package()
+install(DIRECTORY launch
+  DESTINATION share/${PROJECT_NAME})
+  
+install(DIRECTORY urdf
+  DESTINATION share/${PROJECT_NAME})  
+
+  ament_package()
