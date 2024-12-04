@@ -147,14 +147,14 @@
   <joint name="front_left_wheel_joint" type="continuous">
     <parent link="left_steering"/>
     <child link="front_left_wheel"/>
-    <origin xyz="-0.4 0.3 -0.265" rpy="0 0 0"/>
+    <origin xyz="0 0 0" rpy="0 0 0"/>
     <axis xyz="0 1 0"/>
   </joint>
 
   <joint name="front_right_wheel_joint" type="continuous">
     <parent link="right_steering"/>
     <child link="front_right_wheel"/>
-    <origin xyz="-0.4 -0.3 -0.265" rpy="0 0 0"/>
+    <origin xyz="0 0 0" rpy="0 0 0"/>
     <axis xyz="0 1 0"/>
   </joint>
 
