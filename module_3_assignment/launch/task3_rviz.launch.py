@@ -2,10 +2,12 @@ from launch import LaunchDescription
 from launch_ros.actions import Node
 from ament_index_python import get_package_share_directory
 import os
+from launch.substitutions import Command 
 
 def generate_launch_description():
     pkg_path = get_package_share_directory('module_3_assignment')
-    urdf_file = os.path.join(pkg_path, 'urdf', 'combined_robot.urdf')
+    #urdf_file = os.path.join(pkg_path, 'urdf', 'combined_robot.urdf')
+    xacro_file = os.path.join(pkg_path, 'urdf', 'combo_bot.xacro')
     return LaunchDescription([
         Node(
             package='joint_state_publisher_gui',
@@ -16,7 +18,8 @@ def generate_launch_description():
              executable='robot_state_publisher',
              name= 'robot_state_publisher',
              output='screen',
-             arguments=[urdf_file]),
+             parameters=[{'robot_description': Command(['xacro ', xacro_file])}]
+             ),
              
         Node(
             package='rviz2',
