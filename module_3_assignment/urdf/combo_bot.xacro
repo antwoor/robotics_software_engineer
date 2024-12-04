@@ -5,7 +5,7 @@
     <xacro:include filename="mobile_robot.xacro"/>
     <xacro:mobile_robot base_link="mobile_base"/>
     <joint name="connector_joint" type="fixed">
-        <origin xyz="0.0 0.0 0.0" rpy="0.0 0.0 0.0"/>
+        <origin xyz="0.0 0.0 3.0" rpy="0.0 0.0 0.0"/>
         <parent link="mobile_base"/>
         <child link="base_link"/>
         <axis xyz="0.0 0.0 1.0"/>
