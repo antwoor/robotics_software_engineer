@@ -8,6 +8,7 @@ def generate_launch_description():
     pkg_path = get_package_share_directory('module_3_assignment')
     #urdf_file = os.path.join(pkg_path, 'urdf', 'combined_robot.urdf')
     xacro_file = os.path.join(pkg_path, 'urdf', 'combo_bot.xacro')
+    controller_config_file = os.path.join(pkg_path, 'config', 'akkerman_controller.yaml')
     return LaunchDescription([
         Node(
             package='joint_state_publisher_gui',
@@ -20,7 +21,13 @@ def generate_launch_description():
              output='screen',
              parameters=[{'robot_description': Command(['xacro ', xacro_file])}]
              ),
-             
+        Node(
+            package='controller_manager',
+            executable='ros2_control_node',
+            name='controller_manager',
+            parameters=[controller_config_file],
+            output='screen'
+        ),
         Node(
             package='rviz2',
             executable='rviz2',
