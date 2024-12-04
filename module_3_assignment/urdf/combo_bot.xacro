@@ -3,10 +3,10 @@
 
     <!-- Включение мобильной платформы -->
     <xacro:include filename="mobile_robot.xacro"/>
-    <xacro:mobile_robot base_link="mobile_base"/>
+    <xacro:mobile_robot base_link="chassis"/>
     <joint name="connector_joint" type="fixed">
         <origin xyz="0.0 0.0 0.1" rpy="0.0 0.0 0.0"/>
-        <parent link="mobile_base"/>
+        <parent link="chassis"/>
         <child link="base_link"/>
         <axis xyz="0.0 0.0 1.0"/>
         <!-- <limit lower="0.0" upper="0.0" effort="0.0" velocity="0.0"/> -->
