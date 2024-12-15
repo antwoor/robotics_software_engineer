@@ -24,8 +24,7 @@ void line_follower::cameraCallback(const sensor_msgs::msg::Image::SharedPtr came
     static int upperThreshold = this->get_parameter("upper_threshold").as_int();
     //Apply Canny filet 
     cv::Canny(grayImage , cannyImage, lowerThreshold, upperThreshold);
-
-    cv::Mat roi = cannyImage(cv::Range(row, row+200), cv::Range(column, column+100));
+    cv::Mat roi = cannyImage(cv::Range(row, row+200), cv::Range(column, column+500));
 
     cv::imshow("Image", roi);
     cv::waitKey(1);

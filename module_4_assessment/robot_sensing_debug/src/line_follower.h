@@ -21,7 +21,7 @@ private:
   rclcpp::Publisher<geometry_msgs::msg::Twist>::SharedPtr _publisher;
   rclcpp::Subscription<sensor_msgs::msg::Image>::SharedPtr _subscription;
   int row = 600;
-  int column = 800;
+  int column = 600;
 protected:
   virtual void cameraCallback(const sensor_msgs::msg::Image::SharedPtr cameraMsg);
 };
