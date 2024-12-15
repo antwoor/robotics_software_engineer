@@ -2,11 +2,12 @@
 
 line_follower::line_follower() : Node("LineFollowingNode") {
     this->declare_parameter<std::string>("camera_topic", "/camera/image_raw");
+    std::string camera_topic = this->get_parameter("camera_topic").as_string();
     this->declare_parameter<int>("lower_threshold", 200);
     this->declare_parameter<int>("upper_threshold", 250);
     _publisher = this->create_publisher<geometry_msgs::msg::Twist>("cmd_vel", 10);
     _subscription = this->create_subscription<sensor_msgs::msg::Image>(
-      "camera_topic", 10,
+      camera_topic, 10,
       std::bind(&line_follower::cameraCallback, this, std::placeholders::_1));
     RCLCPP_INFO(this->get_logger(), "\n------ Node Started -----\n");
 };
@@ -31,7 +32,7 @@ void line_follower::cameraCallback(const sensor_msgs::msg::Image::SharedPtr came
         edge.push_back(i);
       }
     }
-
+    RCLCPP_INFO(this->get_logger(), "\n------ Image Not Received -----\n");
     if (!edge.empty()) {
       int midArea = edge.back() - edge.front();
       int midPoint = edge.front() + midArea / 2;
@@ -52,6 +53,7 @@ void line_follower::cameraCallback(const sensor_msgs::msg::Image::SharedPtr came
       cv::circle(roi, cv::Point(midPoint, 160), 2, cv::Scalar(255, 255, 255), -1);
       cv::circle(roi, cv::Point(robotMidPoint, 160), 5, cv::Scalar(255, 255, 255), -1);
       cv::imshow("Image", roi);
+      RCLCPP_INFO(this->get_logger(), "\n------ Image Received -----\n");
       cv::waitKey(1);
     }
 }
