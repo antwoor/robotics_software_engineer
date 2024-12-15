@@ -6,8 +6,8 @@
         "limitSymbolsToIncludedHeaders": false
       },
       "includePath": [
-        "/opt/ros/humble/include/**",
-        "/usr/include/**"
+        "/usr/include/**",
+        "/opt/ros/humble/include/**"
       ],
       "name": "ROS",
       "intelliSenseMode": "gcc-x64",

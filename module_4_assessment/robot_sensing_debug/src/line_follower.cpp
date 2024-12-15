@@ -17,15 +17,41 @@ void line_follower::cameraCallback(const sensor_msgs::msg::Image::SharedPtr came
     static cv_bridge::CvImagePtr cvPtr; //Create OpenCv Image pointer
     cvPtr = cv_bridge::toCvCopy(cameraMsg, "bgr8"); //translate ROS cameraMSG to OpenCv image
     cv::Mat grayImage, cannyImage; //creates two colorFrames for the next filtering & scanning operations
-    cv::cvtColor(cvPtr->image, grayImage, cv::COLOR_BGR2GRAY); //Change the colorscheme of Image from cvBridge & save it to GrayUmage
+    cv::cvtColor(cvPtr->image, grayImage, cv::COLOR_BGR2GRAY); //Change the colorscheme of Image from cvBridge & save it to GrayImage
 
     //Define the tresholds for Canny
     static int lowerThreshold = this->get_parameter("lower_threshold").as_int();
     static int upperThreshold = this->get_parameter("upper_threshold").as_int();
-    //Apply Canny filet 
+    //Apply Canny filter to find all of the contours 
     cv::Canny(grayImage , cannyImage, lowerThreshold, upperThreshold);
     cv::Mat roi = cannyImage(cv::Range(row, row+200), cv::Range(column, column+500));
-
+    
+    static std::vector<int> edges(5);
+    for(int i=column; i<column+500; ++i){
+      if(roi.at<uchar>(row+10,i)==255){
+        edges[0]++;
+        RCLCPP_INFO(this->get_logger(), "\n count of  edges: %i \n", i);
+      }
+    }
+    switch (edges[0]){
+      case 1:
+        edges[1]++;
+        break;
+      case 2:
+        edges[2]++;
+        break;
+      case 3:
+        edges[3]++;
+        break;
+      case 4:
+        edges[4]++;
+        break;
+    }
+    edges[0] = 0;
+    //RCLCPP_INFO(this->get_logger(), "\n count of 1 edge: %i \n", edges[1]);
+    //RCLCPP_INFO(this->get_logger(), "\n count of 2 edge: %i \n", edges[2]);
+    //RCLCPP_INFO(this->get_logger(), "\n count of 3 edge: %i \n", edges[3]);
+    //RCLCPP_INFO(this->get_logger(), "\n count of 4 edge: %i \n", edges[4]);
     cv::imshow("Image", roi);
     cv::waitKey(1);
 }
