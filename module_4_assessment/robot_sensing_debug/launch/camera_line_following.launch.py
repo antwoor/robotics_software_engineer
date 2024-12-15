@@ -30,8 +30,8 @@ def generate_launch_description():
     pkg_gazebo_ros = get_package_share_directory('gazebo_ros')
 
     use_sim_time = LaunchConfiguration('use_sim_time', default='true')
-    x_pose = LaunchConfiguration('x_pose', default='-9.09')
-    y_pose = LaunchConfiguration('y_pose', default='2.07')
+    x_pose = '-5.09'
+    y_pose = '2.07'
 
     world = os.path.join(
         get_package_share_directory('robot_sensing_debug'),
@@ -62,7 +62,11 @@ def generate_launch_description():
     spawn_turtlebot_cmd = IncludeLaunchDescription(
         PythonLaunchDescriptionSource(
             os.path.join(launch_file_dir, 'spawn_turtlebot3.launch.py')
-        )
+        ),
+        launch_arguments={
+        'x_pose': x_pose,
+        'y_pose': y_pose
+        }.items()
     )
 
     line_following = Node(

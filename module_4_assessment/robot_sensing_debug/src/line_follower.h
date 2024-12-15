@@ -12,13 +12,15 @@
 
 class line_follower : public rclcpp::Node
 {
-private:
-    float _angularVel =0.3;
-    rclcpp::Publisher<geometry_msgs::msg::Twist>::SharedPtr _publisher;
-    rclcpp::Subscription<sensor_msgs::msg::Image>::SharedPtr _subscription;
 public:
-    line_follower();
-    ~line_follower(){};
+  line_follower();
+  ~line_follower(){};
+
+private:
+  float _angularVel = 0.3;
+  rclcpp::Publisher<geometry_msgs::msg::Twist>::SharedPtr _publisher;
+  rclcpp::Subscription<sensor_msgs::msg::Image>::SharedPtr _subscription;
+
 protected:
-    virtual void cameraCallback(const sensor_msgs::msg::Image::SharedPtr cameraMsg);
+  virtual void cameraCallback(const sensor_msgs::msg::Image::SharedPtr cameraMsg);
 };
