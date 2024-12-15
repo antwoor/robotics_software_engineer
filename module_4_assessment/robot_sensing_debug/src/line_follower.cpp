@@ -27,10 +27,10 @@ void line_follower::cameraCallback(const sensor_msgs::msg::Image::SharedPtr came
     cv::Mat roi = cannyImage(cv::Range(row, row+200), cv::Range(column, column+500));
     
     static std::vector<int> edges(5);
-    for(int i=column; i<column+500; ++i){
-      if(roi.at<uchar>(row+10,i)==255){
+    for(int i=0; i<500; ++i){
+      if(roi.at<uchar>(160,i)==255){
         edges[0]++;
-        RCLCPP_INFO(this->get_logger(), "\n count of  edges: %i \n", i);
+        //RCLCPP_INFO(this->get_logger(), "\n count of  edges: %i \n", i);
       }
     }
     switch (edges[0]){
@@ -48,10 +48,10 @@ void line_follower::cameraCallback(const sensor_msgs::msg::Image::SharedPtr came
         break;
     }
     edges[0] = 0;
-    //RCLCPP_INFO(this->get_logger(), "\n count of 1 edge: %i \n", edges[1]);
-    //RCLCPP_INFO(this->get_logger(), "\n count of 2 edge: %i \n", edges[2]);
-    //RCLCPP_INFO(this->get_logger(), "\n count of 3 edge: %i \n", edges[3]);
-    //RCLCPP_INFO(this->get_logger(), "\n count of 4 edge: %i \n", edges[4]);
+    RCLCPP_INFO(this->get_logger(), "\n count of 1 edge: %i \n", edges[1]);
+    RCLCPP_INFO(this->get_logger(), "\n count of 2 edge: %i \n", edges[2]);
+    RCLCPP_INFO(this->get_logger(), "\n count of 3 edge: %i \n", edges[3]);
+    RCLCPP_INFO(this->get_logger(), "\n count of 4 edge: %i \n", edges[4]);
     cv::imshow("Image", roi);
     cv::waitKey(1);
 }
