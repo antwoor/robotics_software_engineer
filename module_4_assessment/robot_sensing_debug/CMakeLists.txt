@@ -18,7 +18,7 @@ find_package(geometry_msgs REQUIRED)
 add_executable(mazeSolving src/maze_solving_with_lidar.cpp)
 ament_target_dependencies(mazeSolving rclcpp sensor_msgs geometry_msgs)
 
-add_executable(lineFollowing src/line_following_with_camera.cpp)
+add_executable(lineFollowing src/line_follower.cpp src/line_following_with_camera.cpp)
 ament_target_dependencies(lineFollowing rclcpp sensor_msgs cv_bridge geometry_msgs)
 target_link_libraries(lineFollowing ${OpenCV_LIBS})
 
