@@ -22,36 +22,42 @@ void line_follower::cameraCallback(const sensor_msgs::msg::Image::SharedPtr came
     //Define the tresholds for Canny
     static int lowerThreshold = this->get_parameter("lower_threshold").as_int();
     static int upperThreshold = this->get_parameter("upper_threshold").as_int();
+    
     //Apply Canny filter to find all of the contours 
     cv::Canny(grayImage , cannyImage, lowerThreshold, upperThreshold);
     cv::Mat roi = cannyImage(cv::Range(row, row+200), cv::Range(column, column+500));
-    
-    static std::vector<int> edges(5);//here we are checking how many white pixels
+    //
+    //Here image processing starts
+    //
+    static std::vector<int> edges;//here we are checking how many white pixels
     for(int i=0; i<500; ++i){// along the almost whole X-axis of an  croppedimage 
       if(roi.at<uchar>(160,i)==255){// img is already cropped so we have to measure relative numbers of pixels
-        edges[0]++;
+        edges.push_back(i);
         //RCLCPP_INFO(this->get_logger(), "\n count of  edges: %i \n", i);
       }
     }
-    switch (edges[0]){
-      case 1:
-        edges[1]++;
-        break;
-      case 2:
-        edges[2]++;
-        break;
-      case 3:
-        edges[3]++;
-        break;
-      case 4:
-        edges[4]++;
-        break;
+    static int midArea;
+    static int midPoint;
+    static int robotMidPoint;
+    if (!edges.empty()) {
+      midArea = edges.back() - edges.front();
+      midPoint = edges.front() + midArea / 2;
+      robotMidPoint = 500 / 2;
+
+      // Calculate error and adjust robot's direction
+      double error = robotMidPoint - midPoint;
+      velocityMsg.linear.x = 0.1;
+      if (error < 0) {
+        velocityMsg.angular.z = -_angularVel;
+      } else {
+        velocityMsg.angular.z = _angularVel;
+      }
+
+      _publisher->publish(velocityMsg);
     }
-    edges[0] = 0; //clear only holder to see the drift of an error
-    RCLCPP_INFO(this->get_logger(), "\n count of 1 edge: %i \n", edges[1]);
-    RCLCPP_INFO(this->get_logger(), "\n count of 2 edge: %i \n", edges[2]);
-    RCLCPP_INFO(this->get_logger(), "\n count of 3 edge: %i \n", edges[3]);
-    RCLCPP_INFO(this->get_logger(), "\n count of 4 edge: %i \n", edges[4]);
+      // Visualization
+      cv::circle(roi, cv::Point(midPoint, 160), 2, cv::Scalar(255, 255, 255), -1);
+      cv::circle(roi, cv::Point(robotMidPoint, 160), 5, cv::Scalar(255, 255, 255), -1);
     cv::imshow("Image", roi);
     cv::waitKey(1);
 }
