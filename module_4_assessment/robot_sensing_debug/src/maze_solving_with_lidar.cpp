@@ -22,50 +22,74 @@ public:
 
 private:
   void lidarCallback(const sensor_msgs::msg::LaserScan::SharedPtr lidarMsg) {
-    float rightObstacle = *std::max_element(lidarMsg->ranges.begin() + 260,
-                                            lidarMsg->ranges.begin() + 280);
-    float frontObstacle = *std::max_element(lidarMsg->ranges.begin() + 340,
-                                            lidarMsg->ranges.begin() + 360);
-    float leftObstacle = *std::max_element(lidarMsg->ranges.begin() + 80,
-                                           lidarMsg->ranges.begin() + 100);
+    float rightObstacle = *std::min_element(lidarMsg->ranges.begin() + 260, lidarMsg->ranges.begin() + 280);
+    float frontObstacle = *std::min_element(lidarMsg->ranges.begin() + 340, lidarMsg->ranges.begin() + 360);
+    float leftObstacle = *std::min_element(lidarMsg->ranges.begin() + 80, lidarMsg->ranges.begin() + 100);
 
     RCLCPP_INFO(this->get_logger(), "Front: %f, Right: %f, Left: %f",
                 frontObstacle, rightObstacle, leftObstacle);
 
-    if (frontObstacle < frontThreshold_ && rightObstacle < frontThreshold_ &&
-        leftObstacle < frontThreshold_) {
+    if (frontObstacle > frontThreshold_ && rightObstacle > 1.2 && leftObstacle > 1.2) {
       state_ = RobotState::OUT_OF_MAZE;
-    } else if (frontObstacle > frontThreshold_) {
-      state_ = leftObstacle > rightObstacle ? RobotState::TURNING_RIGHT
-                                            : RobotState::TURNING_LEFT;
-    }
-
+    } 
     geometry_msgs::msg::Twist command;
-    switch (state_) {
+    switch (state_)
+    {
     case RobotState::MOVING_STRAIGHT:
-      command.linear.y = linearVel_;
-      command.angular.z = 0.5;
-      break;
-    case RobotState::TURNING_LEFT:
-      command.linear.x = 0.5;
-      command.angular.z = angularVel_;
+      if(frontObstacle <= frontThreshold_){
+        if(rightObstacle >= rightThreshold_ || leftObstacle < lefttThreshold_){
+           state_=RobotState::TURNING_RIGHT;
+           } else if(leftObstacle >= lefttThreshold_ || rightObstacle < rightThreshold_){
+            state_=RobotState::TURNING_LEFT;
+           }
+      }
       break;
     case RobotState::TURNING_RIGHT:
-      command.linear.x = 0.5;
+      if(frontObstacle >= frontThreshold_){
+        state_=RobotState::MOVING_STRAIGHT;
+      }
+      break;
+    case RobotState::TURNING_LEFT:
+      if(frontObstacle >= frontThreshold_){
+        state_=RobotState::MOVING_STRAIGHT;
+      }
+      break;
+    
+    default:
+      break;
+    }
+
+    switch (state_) {
+    case RobotState::MOVING_STRAIGHT:
+      command.linear.x = linearVel_;
+      command.angular.z = 0.0;
+      RCLCPP_INFO(this->get_logger(), "Moving STRAIGHT");
+      break;
+    case RobotState::TURNING_LEFT:
+      command.linear.x = 0.0;
+      command.angular.z = angularVel_;
+      RCLCPP_INFO(this->get_logger(), "Moving LEFT");
+      break;
+    case RobotState::TURNING_RIGHT:
+      command.linear.x = 0.0;
       command.angular.z = -angularVel_;
+      RCLCPP_INFO(this->get_logger(), "Moving RIGHT");
       break;
     case RobotState::OUT_OF_MAZE:
-      command.linear.x = -linearVel_;
-      command.angular.z = -0.5;
+      command.linear.x =  0.0;
+      command.angular.z = 0.0;
+      RCLCPP_INFO(this->get_logger(), "OUT OF MAZE");
       break;
     }
 
     publisher_->publish(command);
   }
 
-  float frontThreshold_ = 2.0f;
-  float angularVel_ = 1.0f;
-  float linearVel_ = 0.7f;
+  float frontThreshold_ = 1.5f;
+  float rightThreshold_ = 0.7f;
+  float lefttThreshold_ = 0.7f;
+  float angularVel_ = 0.8f;
+  float linearVel_ = 0.6f;
   RobotState state_;
   rclcpp::Publisher<geometry_msgs::msg::Twist>::SharedPtr publisher_;
   rclcpp::Subscription<sensor_msgs::msg::LaserScan>::SharedPtr subscription_;
