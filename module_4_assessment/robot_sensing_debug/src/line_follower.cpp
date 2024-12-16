@@ -1,17 +1,17 @@
 #include "line_follower.h"
 
-line_follower::line_follower() : Node("LineFollowingNode") {
+LineFollower::LineFollower() : Node("LineFollowingNode") {
     this->declare_parameter<std::string>("camera_topic", "/camera/image_raw");
     std::string camera_topic = this->get_parameter("camera_topic").as_string();
     this->declare_parameter<int>("lower_threshold", 50);
     this->declare_parameter<int>("upper_threshold", 100);
-    _publisher = this->create_publisher<geometry_msgs::msg::Twist>("cmd_vel", 10);
-    _subscription = this->create_subscription<sensor_msgs::msg::Image>(
+    publisher_ = this->create_publisher<geometry_msgs::msg::Twist>("cmd_vel", 10);
+    subscription_ = this->create_subscription<sensor_msgs::msg::Image>(
       camera_topic, 10,
-      std::bind(&line_follower::cameraCallback, this, std::placeholders::_1));
+      std::bind(&LineFollower::cameraCallback, this, std::placeholders::_1));
     RCLCPP_INFO(this->get_logger(), "\n------ Node Started -----\n");
 };
-void line_follower::cameraCallback(const sensor_msgs::msg::Image::SharedPtr cameraMsg){
+void LineFollower::cameraCallback(const sensor_msgs::msg::Image::SharedPtr cameraMsg){
     
     auto velocityMsg = geometry_msgs::msg::Twist();
     static cv_bridge::CvImagePtr cvPtr; //Create OpenCv Image pointer
@@ -25,7 +25,7 @@ void line_follower::cameraCallback(const sensor_msgs::msg::Image::SharedPtr came
     
     //Apply Canny filter to find all of the contours 
     cv::Canny(grayImage , cannyImage, lowerThreshold, upperThreshold);
-    cv::Mat roi = cannyImage(cv::Range(row, row+200), cv::Range(column, column+500));
+    cv::Mat roi = cannyImage(cv::Range(row_, row_+200), cv::Range(column_, column_+500));
     //
     //Here image processing starts
     //
@@ -48,12 +48,12 @@ void line_follower::cameraCallback(const sensor_msgs::msg::Image::SharedPtr came
       double error = robotMidPoint - midPoint;
       velocityMsg.linear.x = 0.1;
       if (error < 0) {
-        velocityMsg.angular.z = -_angularVel;
+        velocityMsg.angular.z = -angularVel_;
       } else {
-        velocityMsg.angular.z = _angularVel;
+        velocityMsg.angular.z = angularVel_;
       }
 
-      _publisher->publish(velocityMsg);
+      publisher_->publish(velocityMsg);
     }
       // Visualization
       cv::circle(roi, cv::Point(midPoint, 160), 2, cv::Scalar(255, 255, 255), -1);
