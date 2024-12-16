@@ -58,3 +58,7 @@ Open task2.drawio
   y_pose = LaunchConfiguration('y_pose', default='7.135622')
   ```
 - ### summary of the errors encountered 
+  - absolute pathes
+  - incorrect topics
+  - incorrect positions
+  - especially my troubles with **conda**
