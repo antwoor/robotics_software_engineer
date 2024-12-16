@@ -26,9 +26,9 @@ void line_follower::cameraCallback(const sensor_msgs::msg::Image::SharedPtr came
     cv::Canny(grayImage , cannyImage, lowerThreshold, upperThreshold);
     cv::Mat roi = cannyImage(cv::Range(row, row+200), cv::Range(column, column+500));
     
-    static std::vector<int> edges(5);
-    for(int i=0; i<500; ++i){
-      if(roi.at<uchar>(160,i)==255){
+    static std::vector<int> edges(5);//here we are checking how many white pixels
+    for(int i=0; i<500; ++i){// along the almost whole X-axis of an  croppedimage 
+      if(roi.at<uchar>(160,i)==255){// img is already cropped so we have to measure relative numbers of pixels
         edges[0]++;
         //RCLCPP_INFO(this->get_logger(), "\n count of  edges: %i \n", i);
       }
@@ -47,7 +47,7 @@ void line_follower::cameraCallback(const sensor_msgs::msg::Image::SharedPtr came
         edges[4]++;
         break;
     }
-    edges[0] = 0;
+    edges[0] = 0; //clear only holder to see the drift of an error
     RCLCPP_INFO(this->get_logger(), "\n count of 1 edge: %i \n", edges[1]);
     RCLCPP_INFO(this->get_logger(), "\n count of 2 edge: %i \n", edges[2]);
     RCLCPP_INFO(this->get_logger(), "\n count of 3 edge: %i \n", edges[3]);
