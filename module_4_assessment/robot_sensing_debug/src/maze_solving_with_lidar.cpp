@@ -33,32 +33,17 @@ private:
       state_ = RobotState::OUT_OF_MAZE;
     } 
     geometry_msgs::msg::Twist command;
-    switch (state_)
+    if ((frontObstacle > leftObstacle || frontObstacle > rightObstacle) && frontObstacle >frontThreshold_)
     {
-    case RobotState::MOVING_STRAIGHT:
-      if(frontObstacle <= frontThreshold_){
-        if(rightObstacle >= rightThreshold_ || leftObstacle < lefttThreshold_){
-           state_=RobotState::TURNING_RIGHT;
-           } else if(leftObstacle >= lefttThreshold_ || rightObstacle < rightThreshold_){
-            state_=RobotState::TURNING_LEFT;
-           }
-      }
-      break;
-    case RobotState::TURNING_RIGHT:
-      if(frontObstacle >= frontThreshold_){
-        state_=RobotState::MOVING_STRAIGHT;
-      }
-      break;
-    case RobotState::TURNING_LEFT:
-      if(frontObstacle >= frontThreshold_){
-        state_=RobotState::MOVING_STRAIGHT;
-      }
-      break;
-    
-    default:
-      break;
+      state_ = RobotState::MOVING_STRAIGHT;
     }
-
+    else if (rightObstacle > frontObstacle && rightObstacle > rightThreshold_)
+    {
+      state_ = RobotState::TURNING_RIGHT;
+    }
+    else{
+      state_ = RobotState::TURNING_LEFT;
+    }
     switch (state_) {
     case RobotState::MOVING_STRAIGHT:
       command.linear.x = linearVel_;
