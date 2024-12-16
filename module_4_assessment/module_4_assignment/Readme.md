@@ -58,27 +58,3 @@ Open task2.drawio
   y_pose = LaunchConfiguration('y_pose', default='7.135622')
   ```
 - ### summary of the errors encountered 
-
-### Submission Process
-
-1. **Create Files:**
-   - Navigate to the `module_4_assignment` package.
-   - Create the required files, including the maze environment, refactored code, and debugging documentation.
-
-2. **Document Your Work:**
-   - Create a `README.md` file in the `module_4_assignment` package.
-   - Provide details about the files you created, including explanations of the code and the commands needed to run your simulations and tests.
-
-3. **Submit Your Assignment:**
-   - Push your changes to your forked repository.
-   - Provide your repository link in the assignment submission text area.
-   - **Note**: Ensure you press the "Start Assignment" button when you see the page (as it takes time to generate the pages).
-
-4. **Wait for Review:**
-   - Wait for the instructors to review your submission.
-
-## Learning Outcome
-
-By completing this assignment, you will:
-- Learn to control robots based on sensor data.
-- Improve your skills in debugging and fixing issues in complex robotic systems.
