@@ -34,7 +34,7 @@ def generate_launch_description():
     y_pose = LaunchConfiguration('y_pose', default='7.135622')
 
     world = os.path.join(
-        get_package_share_directory('robot_sensing_debug'),
+        get_package_share_directory('module_4_assignment'),
         'worlds',
         'maze.world'
     )
@@ -70,7 +70,7 @@ def generate_launch_description():
     )
 
     maze_solver = Node(
-        package = 'robot_sensing_debug',
+        package = 'module_4_assignment',
         name = 'maze_solvers',
         executable ='mazeSolving',
 

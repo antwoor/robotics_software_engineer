@@ -34,7 +34,7 @@ def generate_launch_description():
     y_pose = '2.07'
 
     world = os.path.join(
-        get_package_share_directory('robot_sensing_debug'),
+        get_package_share_directory('module_4_assignment'),
         'worlds',
         'line_following.world'
     )
@@ -70,7 +70,7 @@ def generate_launch_description():
     )
 
     line_following = Node(
-        package = 'robot_sensing_debug',
+        package = 'module_4_assignment',
         name = 'line_following',
         executable ='lineFollowing',
         parameters=[{'camera_topic': '/camera/image_raw'}]  
