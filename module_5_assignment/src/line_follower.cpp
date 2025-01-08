@@ -3,7 +3,8 @@
 LineFollower::LineFollower() : Node("LineFollowingNode") {
     this->declare_parameter<std::string>("camera_topic", "/camera/image_raw");
     std::string camera_topic = this->get_parameter("camera_topic").as_string();
-    this->declare_parameter<int>("kP", 5);
+    this->declare_parameter<int>("kP", 1);
+    this->declare_parameter<int>("kI", 6);
     this->declare_parameter<int>("lower_threshold", 50);
     this->declare_parameter<int>("upper_threshold", 100);
     publisher_ = this->create_publisher<geometry_msgs::msg::Twist>("cmd_vel", 10);
@@ -24,7 +25,9 @@ void LineFollower::cameraCallback(const sensor_msgs::msg::Image::SharedPtr camer
     static int lowerThreshold = this->get_parameter("lower_threshold").as_int();
     static int upperThreshold = this->get_parameter("upper_threshold").as_int();
     double p = (float)this->get_parameter("kP").as_int();
+    double i = (float)this->get_parameter("kI").as_int();
     p *=0.01;
+    i *=0.0001;
     //Apply Canny filter to find all of the contours 
     cv::Canny(grayImage , cannyImage, lowerThreshold, upperThreshold);
     cv::Mat roi = cannyImage(cv::Range(row_, row_+200), cv::Range(column_, column_+500));
@@ -48,11 +51,11 @@ void LineFollower::cameraCallback(const sensor_msgs::msg::Image::SharedPtr camer
 
       // Calculate error and adjust robot's direction
       double error = robotMidPoint - midPoint;
+      integral += error*dt_;
       velocityMsg.linear.x = 0.1;
-      velocityMsg.angular.z = angularVel_ * p*error;
-
+      velocityMsg.angular.z = angularVel_ * (p*error + i*integral);
       publisher_->publish(velocityMsg);
-      RCLCPP_INFO(this->get_logger(), "ERROR = %f , VELOCITY = %f, P_GAIN = %f", error, velocityMsg.angular.z, p);
+      RCLCPP_INFO(this->get_logger(), "ERROR = %f , VELOCITY = %f, P_GAIN = %f, I_GAIN = %f, integral = %f", error, velocityMsg.angular.z, p, i, integral);
     }
       // Visualization
       cv::circle(roi, cv::Point(midPoint, 160), 2, cv::Scalar(255, 255, 255), -1);
