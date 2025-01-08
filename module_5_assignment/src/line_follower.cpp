@@ -3,10 +3,9 @@
 LineFollower::LineFollower() : Node("LineFollowingNode") {
     this->declare_parameter<std::string>("camera_topic", "/camera/image_raw");
     std::string camera_topic = this->get_parameter("camera_topic").as_string();
+    this->declare_parameter<int>("kP", 5);
     this->declare_parameter<int>("lower_threshold", 50);
     this->declare_parameter<int>("upper_threshold", 100);
-    this->declare_parameter<int>("P_gain", p_);
-    this->declare_parameter<int>("I_gain", i_);
     publisher_ = this->create_publisher<geometry_msgs::msg::Twist>("cmd_vel", 10);
     subscription_ = this->create_subscription<sensor_msgs::msg::Image>(
       camera_topic, 10,
@@ -24,7 +23,8 @@ void LineFollower::cameraCallback(const sensor_msgs::msg::Image::SharedPtr camer
     //Define the tresholds for Canny
     static int lowerThreshold = this->get_parameter("lower_threshold").as_int();
     static int upperThreshold = this->get_parameter("upper_threshold").as_int();
-    
+    double p = (float)this->get_parameter("kP").as_int();
+    p *=0.01;
     //Apply Canny filter to find all of the contours 
     cv::Canny(grayImage , cannyImage, lowerThreshold, upperThreshold);
     cv::Mat roi = cannyImage(cv::Range(row_, row_+200), cv::Range(column_, column_+500));
@@ -47,16 +47,12 @@ void LineFollower::cameraCallback(const sensor_msgs::msg::Image::SharedPtr camer
       robotMidPoint = 500 / 2;
 
       // Calculate error and adjust robot's direction
-      float error = robotMidPoint - midPoint;
-      static float integral = error * dt_;
+      double error = robotMidPoint - midPoint;
       velocityMsg.linear.x = 0.1;
-      if (error < 0) {
-        velocityMsg.angular.z = -angularVel_ * (this->get_parameter("P_gain").as_double() + this->get_parameter("I_gain").as_double() * integral);
-      } else {
-        velocityMsg.angular.z = angularVel_;
-      }
+      velocityMsg.angular.z = angularVel_ * p*error;
 
       publisher_->publish(velocityMsg);
+      RCLCPP_INFO(this->get_logger(), "ERROR = %f , VELOCITY = %f, P_GAIN = %f", error, velocityMsg.angular.z, p);
     }
       // Visualization
       cv::circle(roi, cv::Point(midPoint, 160), 2, cv::Scalar(255, 255, 255), -1);

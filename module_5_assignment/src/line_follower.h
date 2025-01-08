@@ -17,13 +17,13 @@ public:
   ~LineFollower(){};
 
 private:
-  float angularVel_ = 0.3;
+  float angularVel_ = 0.1;
   rclcpp::Publisher<geometry_msgs::msg::Twist>::SharedPtr publisher_;
   rclcpp::Subscription<sensor_msgs::msg::Image>::SharedPtr subscription_;
   int row_ = 600;
   int column_ = 600;
-  float p_ =0;
-  float i_=0;
+  double p_ =0.01;
+  double i_=0.5;
   double dt_=0.0001;
 protected:
   virtual void cameraCallback(const sensor_msgs::msg::Image::SharedPtr cameraMsg);
